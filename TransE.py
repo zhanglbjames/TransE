@@ -1,8 +1,10 @@
-import tensorflow as tf 
-import time 
+# -*- coding: utf-8 -*-
+import tensorflow as tf
+import time
 import argparse
 import random
-import numpy as np 
+import numpy as np
+import matplotlib.pyplot as plt
 import os.path
 import math
 import timeit
@@ -20,7 +22,7 @@ class TransE:
 	def num_triple_train(self):
 		return self.__num_triple_train
 
-	@property 
+	@property
 	def num_triple_test(self):
 		return self.__num_triple_test
 
@@ -28,7 +30,7 @@ class TransE:
 	def testing_data(self):
 		return self.__triple_test
 
-	@property 
+	@property
 	def num_entity(self):
 		return self.__num_entity
 
@@ -45,7 +47,7 @@ class TransE:
 	def hr_t(self):
 		return self.__hr_t
 
-	@property 
+	@property
 	def tr_h(self):
 		return self.__tr_h
 
@@ -57,7 +59,7 @@ class TransE:
 		while start < n_triple:
 			start_t = timeit.default_timer()
 			end = min(start+batch_size, n_triple)
-			size = end - start 
+			size = end - start
 			train_triple_positive = np.asarray([ self.__triple_train[x] for x in  rand_idx[start:end]])
 			train_triple_negative = []
 			for t in train_triple_positive:
@@ -75,14 +77,14 @@ class TransE:
 					train_triple_negative.append((replace_entity_id, t[1],t[2]))
 				else:
 					train_triple_negative.append((t[0], t[1], replace_entity_id))
-				
+
 			start = end
 			prepare_t = timeit.default_timer()-start_t
 
 			yield train_triple_positive, train_triple_negative, prepare_t
 
 
-	def __init__(self, data_dir, negative_sampling,learning_rate, 
+	def __init__(self, data_dir, negative_sampling,learning_rate,
 				 batch_size, max_iter, margin, dimension, norm, evaluation_size, regularizer_weight):
 		# this part for data prepare
 		self.__data_dir=data_dir
@@ -123,13 +125,13 @@ class TransE:
 		bound = 6 / math.sqrt(self.__dimension)
 		with tf.device('/cpu'):
 			self.__embedding_entity = tf.get_variable('embedding_entity', [self.__num_entity, self.__dimension],
-													   initializer=tf.random_uniform_initializer(minval=-bound, maxval=bound, seed = 123))
+													  initializer=tf.random_uniform_initializer(minval=-bound, maxval=bound, seed = 123))
 			self.__embedding_relation = tf.get_variable('embedding_relation', [self.__num_relation, self.__dimension],
-														 initializer=tf.random_uniform_initializer(minval=-bound, maxval=bound, seed =124))
+														initializer=tf.random_uniform_initializer(minval=-bound, maxval=bound, seed =124))
 			self.__variables.append(self.__embedding_entity)
 			self.__variables.append(self.__embedding_relation)
 			print('finishing initializing')
-		
+
 
 
 	def load_data(self):
@@ -185,8 +187,8 @@ class TransE:
 				self.__relation_property_head[t[1]].append(t[0])
 				self.__relation_property_tail[t[1]].append(t[2])
 			self.__relation_property = {x:(len(set(self.__relation_property_tail[x])))/(len(set(self.__relation_property_head[x]))+ len(set(self.__relation_property_tail[x]))) \
-										 for x in self.__relation_property_head.keys()} # {relation_id: p, ...} 0< num <1, and for relation replace head entity with the property p
-		else: 
+										for x in self.__relation_property_head.keys()} # {relation_id: p, ...} 0< num <1, and for relation replace head entity with the property p
+		else:
 			print("unif set do'n need to calculate hpt and tph")
 
 
@@ -242,10 +244,10 @@ class TransE:
 		_, norm_id_replace_tail = tf.nn.top_k(tf.reduce_sum(tf.abs(norm_head_vec + norm_rel_vec - norm_embedding_entity), axis=1), k=self.__num_entity)
 
 
-		
+
 		return id_replace_head, id_replace_tail, norm_id_replace_head, norm_id_replace_tail
 
-		
+
 def train_operation(model, learning_rate=0.01, margin=1.0, optimizer_str = 'gradient'):
 	with tf.device('/cpu'):
 		train_triple_positive_input = tf.placeholder(tf.int32, [None, 3])
@@ -296,8 +298,8 @@ def main():
 	print(args)
 	model = TransE(negative_sampling=args.negative_sampling, data_dir=args.data_dir,
 				   learning_rate=args.learning_rate, batch_size=args.batch_size,
-				   max_iter=args.max_iter, margin=args.margin, 
-				   dimension=args.dimension, norm=args.norm, evaluation_size=args.evaluation_size, 
+				   max_iter=args.max_iter, margin=args.margin,
+				   dimension=args.dimension, norm=args.norm, evaluation_size=args.evaluation_size,
 				   regularizer_weight = args.regularizer_weight)
 
 	train_triple_positive_input, train_triple_negative_input, loss, op_train, loss_every, norm_entity = train_operation(model, learning_rate = args.learning_rate, margin = args.margin, optimizer_str = args.optimizer)
@@ -312,21 +314,39 @@ def main():
 		norm_ent = session.run(tf.nn.l2_normalize(model.embedding_entity, dim =1))
 		session.run(tf.assign(model.embedding_entity, norm_ent))
 
+		# 定义画图数组
+		all_loss=[]
+		mean_rank=[]
+		hit10=[]
+
+		filter_mean_rank=[]
+		filter_hit10=[]
+
+		norm_mean_rank=[]
+		norm_hit10=[]
+
+		norm_filter_mean_rank=[]
+		norm_filter_hit10=[]
+
 		for n_iter in range(args.max_iter):
+			all_loss_n_iter=[]
 			accu_loss =0.
 			batch = 0
 			num_batch = model.num_triple_train/args.batch_size
 			start_time = timeit.default_timer()
 			prepare_time = 0.
-			
+
 			for tp, tn , t in  model.training_data_batch(batch_size= args.batch_size):
 				l, _, l_every, norm_e = session.run([loss, op_train, loss_every, norm_entity], {train_triple_positive_input:tp, train_triple_negative_input: tn})
 				accu_loss += l
 				batch += 1
 				print('[%.2f sec](%d/%d): -- loss: %.5f' %(timeit.default_timer()-start_time, batch, num_batch , l), end='\r')
 				prepare_time += t
+			all_loss_n_iter.append(accu_loss)
 			print('iter[%d] ---loss: %.5f ---time: %.2f ---prepare time : %.2f' %(n_iter, accu_loss, timeit.default_timer()-start_time, prepare_time))
-			
+
+			# TODO
+			#if n_iter %args.evaluate_per_iteration == 0 or n_iter ==0:
 			if n_iter %args.evaluate_per_iteration == 0 or n_iter ==0 or n_iter == args.max_iter-1:
 				#print("[iter %d] after l2 normalization the entity vectors: %s"%(n_iter, str(norm_e[:10])))
 				#print("[iter %d] after training the entity vectors: %s"%(n_iter, str(session.run(tf.sqrt(tf.reduce_sum(model.embedding_entity**2, axis = 1))[:10]))))
@@ -356,10 +376,10 @@ def main():
 					for i in range(len(id_replace_head)):
 						val = id_replace_head[-i-1]
 						if val == t[0]:
-							break						
-						else: 
+							break
+						else:
 							hrank += 1
-							fhrank += 1 
+							fhrank += 1
 							if val in tr_h[(t[2],t[1])]:
 								fhrank -= 1
 
@@ -368,13 +388,13 @@ def main():
 					for i in range(len(norm_id_replace_head)):
 						val = norm_id_replace_head[-i-1]
 						if val == t[0]:
-							break						
-						else: 
+							break
+						else:
 							norm_hrank += 1
-							norm_fhrank += 1 
+							norm_fhrank += 1
 							if val in tr_h[(t[2],t[1])]:
 								norm_fhrank -= 1
-									
+
 
 					trank = 0
 					ftrank = 0
@@ -430,12 +450,113 @@ def main():
 				norm_filter_hit10_head = np.sum(np.asarray(np.asarray(norm_filter_rank_head)<10 , dtype=np.float32))/n_test
 				norm_filter_hit10_tail = np.sum(np.asarray(np.asarray(norm_filter_rank_tail)<10 , dtype=np.float32))/n_test
 
+				#loss
+				all_loss.append(sum(all_loss_n_iter)/len(all_loss_n_iter))
+
+				mean_rank.append((mean_rank_head+ mean_rank_tail)/2)
+				hit10.append(100*(hit10_tail+hit10_head)/2)
 				print('iter:%d --mean rank: %.2f --hit@10: %.2f' %(n_iter, (mean_rank_head+ mean_rank_tail)/2, (hit10_tail+hit10_head)/2))
+				filter_mean_rank.append((filter_mean_rank_head+ filter_mean_rank_tail)/2)
+				filter_hit10.append(100*(filter_hit10_tail+filter_hit10_head)/2)
 				print('iter:%d --filter mean rank: %.2f --filter hit@10: %.2f' %(n_iter, (filter_mean_rank_head+ filter_mean_rank_tail)/2, (filter_hit10_tail+filter_hit10_head)/2))
 
+				norm_mean_rank.append((norm_mean_rank_head+ norm_mean_rank_tail)/2)
+				norm_hit10.append(100*(norm_hit10_tail+norm_hit10_head)/2)
 				print('iter:%d --norm mean rank: %.2f --norm hit@10: %.2f' %(n_iter, (norm_mean_rank_head+ norm_mean_rank_tail)/2, (norm_hit10_tail+norm_hit10_head)/2))
+				norm_filter_mean_rank.append((norm_filter_mean_rank_head+ norm_filter_mean_rank_tail)/2)
+				norm_filter_hit10.append(100*(norm_filter_hit10_tail+norm_filter_hit10_head)/2)
 				print('iter:%d --norm filter mean rank: %.2f --norm filter hit@10: %.2f' %(n_iter, (norm_filter_mean_rank_head+ norm_filter_mean_rank_tail)/2, (norm_filter_hit10_tail+norm_filter_hit10_head)/2))
-			
+		#横坐标
+		X = list(range(0,10*len(mean_rank),10))
+
+		#0
+		plt.figure(figsize=(11, 11),dpi=80)
+		plt.title('loss')
+		plt.plot(X,np.array(all_loss),'-r',label='loss')
+		plt.xlabel('epoch')
+		plt.ylabel('loss')
+		plt.legend()
+		plt.savefig('./result_image/loss.png',dpi=80)
+		plt.show()
+		#1
+		plt.figure(figsize=(11, 11),dpi=80)
+		f,(fg1_raw,fg2_raw)=plt.subplots(2,1)
+
+		#fg1_raw.set_title('mean rank')
+		fg1_raw.set_xlabel('epoch')
+		fg1_raw.set_ylabel('rank')
+		fg1_raw.plot(X,np.array(mean_rank),'-r',label='mean rank')
+		fg1_raw.legend()
+
+		#fg2_raw.set_title('hit@10')
+		fg2_raw.set_xlabel('epoch')
+		fg2_raw.set_ylabel('accuracy(%)')
+		fg2_raw.plot(X,np.array(hit10),'b--o',label='hit@10')
+		fg2_raw.legend()
+
+		plt.tight_layout(pad=1, w_pad=1, h_pad=1)
+		plt.savefig('./result_image/raw.png',dpi=80)
+		plt.show()
+		#2
+		plt.figure(figsize=(11, 11),dpi=80)
+		f,(fg1_filter,fg2_filter)=plt.subplots(2,1)
+
+		#fg1_filter.set_title('filter mean rank')
+		fg1_filter.set_xlabel('epoch')
+		fg1_filter.set_ylabel('rank')
+		fg1_filter.plot(X,np.array(filter_mean_rank),'-r',label='filter mean rank')
+		fg1_filter.legend()
+
+		#fg2_filter.set_title('filter hit@10')
+		fg2_filter.set_xlabel('epoch')
+		fg2_filter.set_ylabel('accuracy(%)')
+		fg2_filter.plot(X,np.array(filter_hit10),'b--o',label='filter hit@10')
+		fg2_filter.legend()
+
+		plt.tight_layout(pad=1, w_pad=1, h_pad=1)
+		plt.savefig('./result_image/filter.png',dpi=80)
+		plt.show()
+
+		#3
+		plt.figure(figsize=(11, 11),dpi=80)
+		f,(fg1_norm,fg2_norm)=plt.subplots(2,1)
+
+		#fg1_norm.set_title('norm mean rank')
+		fg1_norm.set_xlabel('epoch')
+		fg1_norm.set_ylabel('rank')
+		fg1_norm.plot(X,np.array(norm_mean_rank),'-r',label='norm mean rank')
+		fg1_norm.legend()
+
+		#fg2_norm.set_title('norm hit@10')
+		fg2_norm.set_xlabel('epoch')
+		fg2_norm.set_ylabel('accuracy(%)')
+		fg2_norm.plot(X,np.array(norm_hit10),'b--o',label='norm hit@10')
+		fg2_norm.legend()
+
+		plt.tight_layout(pad=1, w_pad=1, h_pad=1)
+		plt.savefig('./result_image/norm.png',dpi=80)
+		plt.show()
+
+		#4
+		plt.figure(figsize=(11, 11),dpi=80)
+		f,(fg1_norm_filter,fg2_norm_filter)=plt.subplots(2,1)
+
+		#fg1_norm_filter.set_title('norm filter mean rank')
+		fg1_norm_filter.set_xlabel('epoch')
+		fg1_norm_filter.set_ylabel('rank')
+		fg1_norm_filter.plot(X,np.array(norm_filter_mean_rank),'-r',label='norm filter mean rank')
+		fg1_norm_filter.legend()
+
+		#fg2_norm_filter.set_title('norm filter hit@10')
+		fg2_norm_filter.set_xlabel('epoch')
+		fg2_norm_filter.set_ylabel('accuracy(%)')
+		fg2_norm_filter.plot(X,np.array(norm_filter_hit10),'b--o',label='norm filter hit@10')
+		fg2_norm_filter.legend()
+
+		plt.tight_layout(pad=1, w_pad=1, h_pad=1)
+		plt.savefig('./result_image/norm_filter.png',dpi=80)
+		plt.show()
+
 
 if __name__ =="__main__":
 	main()

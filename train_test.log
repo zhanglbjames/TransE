@@ -1,0 +1,165 @@
+Namespace(batch_size=4096, data_dir='/home/mac/TransE_data/FB15k', dimension=50, evaluate_per_iteration=10, evaluate_worker=4, evaluation_size=500, learning_rate=0.01, margin=1.0, max_iter=100, n_test=300, negative_sampling='bern', norm='L1', optimizer='adam', regularizer_weight=1e-05, save_dir='output/')
+loading entity2id.txt ...
+entity number: 14951
+relation number: 1345
+training triple number: 483142
+testing triple number: 59071
+valid triple number: 50000
+finish preparing data.
+finishing initializing
+finish palceholder
+finish model.test
+2018-03-30 12:16:21.766669: I tensorflow/core/platform/cpu_feature_guard.cc:137] Your CPU supports instructions that this TensorFlow binary was not compiled to use: SSE4.1 SSE4.2 AVX AVX2 FMA
+2018-03-30 12:16:22.026991: I tensorflow/stream_executor/cuda/cuda_gpu_executor.cc:892] successful NUMA node read from SysFS had negative value (-1), but there must be at least one NUMA node, so returning NUMA node zero
+2018-03-30 12:16:22.027339: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1030] Found device 0 with properties:
+name: GeForce GTX 950M major: 5 minor: 0 memoryClockRate(GHz): 1.124
+pciBusID: 0000:01:00.0
+totalMemory: 1.96GiB freeMemory: 1.93GiB
+2018-03-30 12:16:22.027355: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1120] Creating TensorFlow device (/device:GPU:0) -> (device: 0, name: GeForce GTX 950M, pci bus id: 0000:01:00.0, compute capability: 5.0)
+WARNING:tensorflow:From /home/mac/miniconda2/envs/py3.6/lib/python3.6/site-packages/tensorflow/python/util/tf_should_use.py:107: initialize_all_variables (from tensorflow.python.ops.variables) is deprecated and will be removed after 2017-03-02.
+Instructions for updating:
+Use `tf.global_variables_initializer` instead.
+iter[0] ---loss: 210274.62646 ---time: 6.04 ---prepare time : 2.13
+iter:0 --mean rank: 2767.19 --hit@10: 0.15
+iter:0 --filter mean rank: 2710.39 --filter hit@10: 0.18
+iter:0 --norm mean rank: 2638.50 --norm hit@10: 0.16
+iter:0 --norm filter mean rank: 2582.14 --norm filter hit@10: 0.17
+iter[1] ---loss: 57270.25104 ---time: 6.43 ---prepare time : 2.29
+iter[2] ---loss: 30188.39619 ---time: 6.06 ---prepare time : 2.17
+iter[3] ---loss: 19657.04585 ---time: 6.12 ---prepare time : 2.19
+iter[4] ---loss: 15001.12315 ---time: 5.72 ---prepare time : 2.11
+iter[5] ---loss: 12578.77195 ---time: 5.77 ---prepare time : 2.12
+iter[6] ---loss: 11258.06023 ---time: 5.85 ---prepare time : 2.13
+iter[7] ---loss: 10125.61116 ---time: 6.15 ---prepare time : 2.21
+iter[8] ---loss: 9257.81721 ---time: 5.96 ---prepare time : 2.17
+iter[9] ---loss: 8628.53917 ---time: 6.15 ---prepare time : 2.23
+iter[10] ---loss: 7933.95746 ---time: 5.69 ---prepare time : 2.09
+iter:10 --mean rank: 503.37 --hit@10: 0.28
+iter:10 --filter mean rank: 446.24 --filter hit@10: 0.34
+iter:10 --norm mean rank: 382.11 --norm hit@10: 0.30
+iter:10 --norm filter mean rank: 331.95 --norm filter hit@10: 0.34
+iter[11] ---loss: 7814.81301 ---time: 6.11 ---prepare time : 2.20
+iter[12] ---loss: 7420.93840 ---time: 5.71 ---prepare time : 2.10
+iter[13] ---loss: 7026.03942 ---time: 5.74 ---prepare time : 2.13
+iter[14] ---loss: 6978.74158 ---time: 5.69 ---prepare time : 2.10
+iter[15] ---loss: 6837.75790 ---time: 5.81 ---prepare time : 2.13
+iter[16] ---loss: 6610.07132 ---time: 6.36 ---prepare time : 2.29
+iter[17] ---loss: 6426.44566 ---time: 6.34 ---prepare time : 2.26
+iter[18] ---loss: 6346.70932 ---time: 6.34 ---prepare time : 2.25
+iter[19] ---loss: 6151.65542 ---time: 6.28 ---prepare time : 2.23
+iter[20] ---loss: 5989.11031 ---time: 6.33 ---prepare time : 2.23
+iter:20 --mean rank: 368.35 --hit@10: 0.32
+iter:20 --filter mean rank: 321.26 --filter hit@10: 0.40
+iter:20 --norm mean rank: 293.38 --norm hit@10: 0.32
+iter:20 --norm filter mean rank: 246.25 --norm filter hit@10: 0.40
+iter[21] ---loss: 5931.23413 ---time: 6.36 ---prepare time : 2.28
+iter[22] ---loss: 5718.91367 ---time: 6.95 ---prepare time : 2.47
+iter[23] ---loss: 5714.07559 ---time: 6.54 ---prepare time : 2.30
+iter[24] ---loss: 5703.66957 ---time: 6.11 ---prepare time : 2.17
+iter[25] ---loss: 5545.02028 ---time: 5.93 ---prepare time : 2.14
+iter[26] ---loss: 5355.39811 ---time: 5.88 ---prepare time : 2.14
+iter[27] ---loss: 5538.77172 ---time: 5.93 ---prepare time : 2.15
+iter[28] ---loss: 5419.12881 ---time: 5.86 ---prepare time : 2.12
+iter[29] ---loss: 5311.00766 ---time: 5.89 ---prepare time : 2.18
+iter[30] ---loss: 5257.28531 ---time: 5.89 ---prepare time : 2.10
+iter:30 --mean rank: 300.48 --hit@10: 0.38
+iter:30 --filter mean rank: 251.55 --filter hit@10: 0.46
+iter:30 --norm mean rank: 242.77 --norm hit@10: 0.39
+iter:30 --norm filter mean rank: 194.17 --norm filter hit@10: 0.46
+iter[31] ---loss: 5118.17128 ---time: 5.91 ---prepare time : 2.16
+iter[32] ---loss: 5002.44203 ---time: 6.09 ---prepare time : 2.19
+iter[33] ---loss: 4882.42437 ---time: 6.06 ---prepare time : 2.21
+iter[34] ---loss: 4962.41781 ---time: 7.02 ---prepare time : 2.52
+iter[35] ---loss: 4875.70173 ---time: 6.23 ---prepare time : 2.21
+iter[36] ---loss: 4821.99721 ---time: 6.18 ---prepare time : 2.20
+iter[37] ---loss: 4728.61415 ---time: 6.01 ---prepare time : 2.15
+iter[38] ---loss: 4878.37841 ---time: 6.90 ---prepare time : 2.43
+iter[39] ---loss: 4788.16526 ---time: 6.05 ---prepare time : 2.19
+iter[40] ---loss: 4651.06175 ---time: 6.09 ---prepare time : 2.20
+iter:40 --mean rank: 288.33 --hit@10: 0.36
+iter:40 --filter mean rank: 238.93 --filter hit@10: 0.44
+iter:40 --norm mean rank: 231.37 --norm hit@10: 0.36
+iter:40 --norm filter mean rank: 184.81 --norm filter hit@10: 0.44
+iter[41] ---loss: 4649.46531 ---time: 6.04 ---prepare time : 2.16
+iter[42] ---loss: 4531.99723 ---time: 6.42 ---prepare time : 2.26
+iter[43] ---loss: 4523.08047 ---time: 7.27 ---prepare time : 2.52
+iter[44] ---loss: 4473.08649 ---time: 6.57 ---prepare time : 2.31
+iter[45] ---loss: 4516.36055 ---time: 6.40 ---prepare time : 2.28
+iter[46] ---loss: 4458.06998 ---time: 6.32 ---prepare time : 2.29
+iter[47] ---loss: 4354.07738 ---time: 6.13 ---prepare time : 2.26
+iter[48] ---loss: 4362.63734 ---time: 6.17 ---prepare time : 2.22
+iter[49] ---loss: 4291.15880 ---time: 6.26 ---prepare time : 2.23
+iter[50] ---loss: 4260.76395 ---time: 5.96 ---prepare time : 2.15
+iter:50 --mean rank: 265.94 --hit@10: 0.34
+iter:50 --filter mean rank: 216.24 --filter hit@10: 0.42
+iter:50 --norm mean rank: 219.58 --norm hit@10: 0.35
+iter:50 --norm filter mean rank: 170.79 --norm filter hit@10: 0.44
+iter[51] ---loss: 4211.03336 ---time: 5.80 ---prepare time : 2.13
+iter[52] ---loss: 4111.58968 ---time: 6.43 ---prepare time : 2.28
+iter[53] ---loss: 4160.26994 ---time: 6.08 ---prepare time : 2.22
+iter[54] ---loss: 4147.62655 ---time: 6.02 ---prepare time : 2.21
+iter[55] ---loss: 4183.33423 ---time: 5.98 ---prepare time : 2.18
+iter[56] ---loss: 4090.28937 ---time: 6.54 ---prepare time : 2.39
+iter[57] ---loss: 4007.53474 ---time: 6.84 ---prepare time : 2.48
+iter[58] ---loss: 3982.80196 ---time: 5.74 ---prepare time : 2.10
+iter[59] ---loss: 4090.81973 ---time: 6.21 ---prepare time : 2.24
+iter[60] ---loss: 4002.70313 ---time: 6.23 ---prepare time : 2.25
+iter:60 --mean rank: 262.73 --hit@10: 0.34
+iter:60 --filter mean rank: 211.36 --filter hit@10: 0.44
+iter:60 --norm mean rank: 225.59 --norm hit@10: 0.35
+iter:60 --norm filter mean rank: 171.88 --norm filter hit@10: 0.45
+iter[61] ---loss: 4055.55522 ---time: 6.09 ---prepare time : 2.19
+iter[62] ---loss: 3933.51590 ---time: 6.61 ---prepare time : 2.37
+iter[63] ---loss: 4000.02550 ---time: 7.19 ---prepare time : 2.59
+iter[64] ---loss: 3874.11345 ---time: 7.23 ---prepare time : 2.60
+iter[65] ---loss: 3796.26657 ---time: 6.95 ---prepare time : 2.43
+iter[66] ---loss: 3895.89484 ---time: 7.02 ---prepare time : 2.47
+iter[67] ---loss: 3680.19484 ---time: 6.55 ---prepare time : 2.31
+iter[68] ---loss: 3731.13119 ---time: 7.25 ---prepare time : 2.57
+iter[69] ---loss: 3734.28505 ---time: 6.95 ---prepare time : 2.47
+iter[70] ---loss: 3715.51513 ---time: 6.95 ---prepare time : 2.44
+iter:70 --mean rank: 256.29 --hit@10: 0.35
+iter:70 --filter mean rank: 201.01 --filter hit@10: 0.45
+iter:70 --norm mean rank: 211.15 --norm hit@10: 0.36
+iter:70 --norm filter mean rank: 156.40 --norm filter hit@10: 0.46
+iter[71] ---loss: 3703.59166 ---time: 7.35 ---prepare time : 2.57
+iter[72] ---loss: 3674.25099 ---time: 6.85 ---prepare time : 2.38
+iter[73] ---loss: 3767.22573 ---time: 6.78 ---prepare time : 2.37
+iter[74] ---loss: 3624.83765 ---time: 6.93 ---prepare time : 2.45
+iter[75] ---loss: 3573.40450 ---time: 6.96 ---prepare time : 2.46
+iter[76] ---loss: 3613.14744 ---time: 7.59 ---prepare time : 2.76
+iter[77] ---loss: 3630.80877 ---time: 6.27 ---prepare time : 2.28
+iter[78] ---loss: 3484.23903 ---time: 6.30 ---prepare time : 2.28
+iter[79] ---loss: 3508.97854 ---time: 5.92 ---prepare time : 2.16
+iter[80] ---loss: 3618.54694 ---time: 5.95 ---prepare time : 2.16
+iter:80 --mean rank: 201.52 --hit@10: 0.34
+iter:80 --filter mean rank: 147.81 --filter hit@10: 0.45
+iter:80 --norm mean rank: 175.48 --norm hit@10: 0.36
+iter:80 --norm filter mean rank: 121.03 --norm filter hit@10: 0.46
+iter[81] ---loss: 3540.95617 ---time: 6.36 ---prepare time : 2.35
+iter[82] ---loss: 3544.62255 ---time: 6.88 ---prepare time : 2.43
+iter[83] ---loss: 3415.88816 ---time: 6.80 ---prepare time : 2.40
+iter[84] ---loss: 3507.06265 ---time: 7.00 ---prepare time : 2.43
+iter[85] ---loss: 3469.45095 ---time: 6.53 ---prepare time : 2.29
+iter[86] ---loss: 3523.50274 ---time: 6.55 ---prepare time : 2.31
+iter[87] ---loss: 3421.14220 ---time: 6.79 ---prepare time : 2.37
+iter[88] ---loss: 3253.89237 ---time: 6.40 ---prepare time : 2.30
+iter[89] ---loss: 3458.76810 ---time: 6.34 ---prepare time : 2.24
+iter[90] ---loss: 3403.09415 ---time: 6.23 ---prepare time : 2.21
+iter:90 --mean rank: 232.94 --hit@10: 0.37
+iter:90 --filter mean rank: 182.26 --filter hit@10: 0.48
+iter:90 --norm mean rank: 194.22 --norm hit@10: 0.38
+iter:90 --norm filter mean rank: 143.68 --norm filter hit@10: 0.49
+iter[91] ---loss: 3389.05510 ---time: 6.23 ---prepare time : 2.26
+iter[92] ---loss: 3387.48664 ---time: 6.23 ---prepare time : 2.22
+iter[93] ---loss: 3308.25492 ---time: 6.28 ---prepare time : 2.23
+iter[94] ---loss: 3287.88497 ---time: 6.23 ---prepare time : 2.24
+iter[95] ---loss: 3304.55803 ---time: 6.16 ---prepare time : 2.21
+iter[96] ---loss: 3145.63351 ---time: 6.20 ---prepare time : 2.22
+iter[97] ---loss: 3310.56343 ---time: 6.15 ---prepare time : 2.21
+iter[98] ---loss: 3165.36511 ---time: 6.10 ---prepare time : 2.17
+iter[99] ---loss: 3125.03233 ---time: 6.22 ---prepare time : 2.25
+iter:99 --mean rank: 327.58 --hit@10: 0.38
+iter:99 --filter mean rank: 235.98 --filter hit@10: 0.49
+iter:99 --norm mean rank: 290.61 --norm hit@10: 0.39
+iter:99 --norm filter mean rank: 198.44 --norm filter hit@10: 0.50
