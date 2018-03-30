@@ -469,6 +469,13 @@ def main():
 		#横坐标
 		X = list(range(0,10*len(mean_rank),10))
 
+		# offical
+		offical_mean_rank_raw=[243.0 for i in range(0,len(mean_rank))]
+		offical_mean_rank_filter=[125.0 for i in range(0,len(filter_mean_rank))]
+
+		offical_hit10_raw=[34.9 for i in range(0,len(hit10))]
+		offical_hit10_filter=[47.1 for i in range(0,len(filter_hit10))]
+
 		#0
 		plt.figure(figsize=(11, 11),dpi=80)
 		plt.title('loss')
@@ -485,13 +492,15 @@ def main():
 		#fg1_raw.set_title('mean rank')
 		fg1_raw.set_xlabel('epoch')
 		fg1_raw.set_ylabel('rank')
-		fg1_raw.plot(X,np.array(mean_rank),'-r',label='mean rank')
+		fg1_raw.plot(X,np.array(mean_rank),'-r',label='raw mean rank')
+		fg1_raw.plot(X,np.array(offical_mean_rank_raw),'b--o',label='offical(243)')
 		fg1_raw.legend()
 
 		#fg2_raw.set_title('hit@10')
 		fg2_raw.set_xlabel('epoch')
 		fg2_raw.set_ylabel('accuracy(%)')
-		fg2_raw.plot(X,np.array(hit10),'b--o',label='hit@10')
+		fg2_raw.plot(X,np.array(hit10),'-r',label='raw hit@10')
+		fg2_raw.plot(X,np.array(offical_hit10_raw),'b--o',label='offical(34.9%)')
 		fg2_raw.legend()
 
 		plt.tight_layout(pad=1, w_pad=1, h_pad=1)
@@ -505,12 +514,14 @@ def main():
 		fg1_filter.set_xlabel('epoch')
 		fg1_filter.set_ylabel('rank')
 		fg1_filter.plot(X,np.array(filter_mean_rank),'-r',label='filter mean rank')
+		fg1_filter.plot(X,np.array(offical_mean_rank_filter),'b--o',label='offical(125)')
 		fg1_filter.legend()
 
 		#fg2_filter.set_title('filter hit@10')
 		fg2_filter.set_xlabel('epoch')
 		fg2_filter.set_ylabel('accuracy(%)')
-		fg2_filter.plot(X,np.array(filter_hit10),'b--o',label='filter hit@10')
+		fg2_filter.plot(X,np.array(filter_hit10),'-r',label='filter hit@10')
+		fg2_filter.plot(X,np.array(offical_hit10_filter),'b--o',label='offical(47.1%)')
 		fg2_filter.legend()
 
 		plt.tight_layout(pad=1, w_pad=1, h_pad=1)
@@ -525,12 +536,14 @@ def main():
 		fg1_norm.set_xlabel('epoch')
 		fg1_norm.set_ylabel('rank')
 		fg1_norm.plot(X,np.array(norm_mean_rank),'-r',label='norm mean rank')
+		fg1_norm.plot(X,np.array(offical_mean_rank_raw),'b--o',label='offical raw rank(243)')
 		fg1_norm.legend()
 
 		#fg2_norm.set_title('norm hit@10')
 		fg2_norm.set_xlabel('epoch')
 		fg2_norm.set_ylabel('accuracy(%)')
-		fg2_norm.plot(X,np.array(norm_hit10),'b--o',label='norm hit@10')
+		fg2_norm.plot(X,np.array(norm_hit10),'-r',label='norm hit@10')
+		fg2_norm.plot(X,np.array(offical_hit10_raw),'b--o',label='offical raw hit@10(34.9%)')
 		fg2_norm.legend()
 
 		plt.tight_layout(pad=1, w_pad=1, h_pad=1)
@@ -545,12 +558,14 @@ def main():
 		fg1_norm_filter.set_xlabel('epoch')
 		fg1_norm_filter.set_ylabel('rank')
 		fg1_norm_filter.plot(X,np.array(norm_filter_mean_rank),'-r',label='norm filter mean rank')
+		fg1_norm_filter.plot(X,np.array(offical_mean_rank_filter),'b--o',label='offical filter rank(125)')
 		fg1_norm_filter.legend()
 
 		#fg2_norm_filter.set_title('norm filter hit@10')
 		fg2_norm_filter.set_xlabel('epoch')
 		fg2_norm_filter.set_ylabel('accuracy(%)')
-		fg2_norm_filter.plot(X,np.array(norm_filter_hit10),'b--o',label='norm filter hit@10')
+		fg2_norm_filter.plot(X,np.array(norm_filter_hit10),'-r',label='norm filter hit@10')
+		fg2_norm_filter.plot(X,np.array(offical_hit10_filter),'b--o',label='offical filter hit@10(47.1%)')
 		fg2_norm_filter.legend()
 
 		plt.tight_layout(pad=1, w_pad=1, h_pad=1)
